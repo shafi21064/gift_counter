@@ -19,37 +19,15 @@ class SearchProvider extends ChangeNotifier {
     filteredData = _data;
     debugPrint(filteredData.length.toString());
     notifyListeners();
-    //filteredData = sortedByModifiedTIme(filteredData);
   }
 
   void onSearchName(String searchText) {
     filteredData = data
         .where((element) =>
-                element.name!.toLowerCase().contains(searchText.toLowerCase()))
+                element.name!.toLowerCase().startsWith(searchText.toLowerCase()))
         .toList();
     notifyListeners();
   }
-
-  // void onSearchGender(String gender, giftType) {
-  //   if(gender == 'Select Gender' && giftType == 'Select Gift Type'){
-  //     filteredData = data;
-  //   }else{
-  //   filteredData = data
-  //       .where((element) =>
-  //           element.gender!.toLowerCase().contains(gender.toLowerCase()))
-  //       .toList() ;
-  //   }
-  // }
-  // void onSearchGiftType(String giftType, gender) {
-  //   if(giftType == 'Select Gift Type' && gender == 'Select Gender'){
-  //     filteredData = data;
-  //   }else {
-  //     filteredData = data
-  //         .where((element) =>
-  //         element.giftType!.toLowerCase().contains(giftType.toLowerCase()))
-  //         .toList();
-  //   }
-  // }
 
   void filterData ({required String gender, required String giftType}){
     print('gender= $gender and $giftType');
@@ -58,18 +36,18 @@ class SearchProvider extends ChangeNotifier {
     }else if (gender != 'Select Gender' && giftType == 'Select Gift Type'){
       filteredData = data
           .where((element) =>
-          element.gender!.toLowerCase().contains(gender.toLowerCase()))
+          element.gender!.toLowerCase().startsWith(gender.toLowerCase()))
           .toList();
     }else if(gender == 'Select Gender' && giftType != 'Select Gift Type'){
       filteredData = data
           .where((element) =>
-          element.giftType!.toLowerCase().contains(giftType.toLowerCase()))
+          element.giftType!.toLowerCase().startsWith(giftType.toLowerCase()))
           .toList();
     }else if(gender != 'Select Gender' && giftType != 'Select Gift Type'){
       filteredData = data
           .where((element) =>
-          element.giftType!.toLowerCase().contains(giftType.toLowerCase()) &&
-      element.gender!.toLowerCase().contains(gender.toLowerCase()))
+          element.giftType!.toLowerCase().startsWith(giftType.toLowerCase()) &&
+      element.gender!.toLowerCase().startsWith(gender.toLowerCase()))
           .toList();
     }
     notifyListeners();

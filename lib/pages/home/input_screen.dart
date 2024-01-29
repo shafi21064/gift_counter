@@ -27,61 +27,6 @@ class _InputScreenState extends State<InputScreen> {
   final TextEditingController _giftNameController = TextEditingController();
   final DBHelper dbHelper = DBHelper();
 
-  void _insertData(BuildContext context){
-    final dropDownProvider = Provider.of<DropDownProvider>(context, listen: false);
-    final counterProvider = Provider.of<CounterProvider>(context);
-    if(dropDownProvider.selectedGender != 'Select Gender' &&
-        dropDownProvider.selectedGiftType != 'Select Gift Type' &&
-        dropDownProvider.selectedGender != null &&
-        dropDownProvider.selectedGiftType != null &&
-        _nameController.text.toString() != '') {
-      dbHelper.insertData(GifterModel(
-          name: _nameController.text.toString(),
-          gender: dropDownProvider.selectedGender,
-          giftType: dropDownProvider.selectedGiftType,
-          amount: _amountController.text.toString(),
-          giftName: _giftNameController.text.toString(),
-          date: DateTime.now().toString()
-      )).then((value) {
-        debugPrint('success');
-        counterProvider.addItem();
-        Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (context) => const Home()),
-                (route) => false);
-        Utils.toastMessage('Data added');
-      }).onError((error, stackTrace) {
-        debugPrint(error.toString());
-        Utils.flashBarMessage(
-            context: context,
-            message: 'Failed',
-            icon: const Icon(Icons.info)
-        );
-      });
-    }else if(_nameController.text.toString() == ''){
-      Utils.flashBarMessage(
-          context: context,
-          message: 'Please Enter a Name',
-          icon: const Icon(Icons.info),
-          flushbarPosition: FlushbarPosition.TOP
-      );
-    }else if(dropDownProvider.selectedGender == 'Select Gender' ||
-        dropDownProvider.selectedGender == null){
-      Utils.flashBarMessage(
-          context: context,
-          message: 'Please Select Gender',
-          icon: const Icon(Icons.info),
-          flushbarPosition: FlushbarPosition.TOP
-      );
-    }else if(dropDownProvider.selectedGiftType == 'Select Gift Type' ||
-        dropDownProvider.selectedGiftType == null){
-      Utils.flashBarMessage(
-          context: context,
-          message: 'Please Select Gift Type',
-          icon: const Icon(Icons.info),
-          flushbarPosition: FlushbarPosition.TOP
-      );
-    }
-  }
 
   @override
   void dispose() {

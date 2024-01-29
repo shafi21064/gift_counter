@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:gifter/controller/db_helper.dart';
 import 'package:gifter/controller/drop_down_provider.dart';
+import 'package:gifter/controller/update_provider.dart';
 import 'package:gifter/models/gifter_model.dart';
 import 'package:gifter/pages/gifter_list/view/gifter_list.dart';
 import 'package:gifter/res/compunents/custom_button.dart';
@@ -49,6 +50,7 @@ class _UpdateInputScreenState extends State<UpdateInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //final updatedProvider = Provider.of<UpdateProvider>(context);
     final dropDownProvider = Provider.of<DropDownProvider>(context);
     //dropDownProvider.selectedGender = widget.gifterModel.gender.toString();
     return Column(
@@ -58,36 +60,35 @@ class _UpdateInputScreenState extends State<UpdateInputScreen> {
           controller: _nameController,
         ),
         Gap(Utils(context).height * .01),
-        Consumer<DropDownProvider>(
-            builder: (context, dropDownValue, child) {
+        Consumer<UpdateProvider>(
+            builder: (context, updateValue, child) {
               return Column(
                 children: [
                   DropDown(
-                      options: dropDownValue.genderOption,
-                      selectedValue: dropDownValue.selectedGender,
+                      options: dropDownProvider.genderOption,
+                      selectedValue: updateValue.updatedGender,
                       onValueChanged: (selectedValue){
-                        dropDownValue.setGenderValue(selectedValue);
+                        updateValue.setUpdatedGenderValue(selectedValue);
                       },
                       hintText: 'Select Gender',
                       width: Utils(context).width
                   ),
                   Gap(Utils(context).height * .01),
                   DropDown(
-                    options: dropDownValue.giftTypeOption,
-                    selectedValue: dropDownValue.selectedGiftType,
+                    options: dropDownProvider.giftTypeOption,
+                    selectedValue: updateValue.updatedGiftType,
                     onValueChanged: (selectedValue){
-                      dropDownValue.setGiftTypeValue(selectedValue);
-                      dropDownValue.setEnable();
+                      updateValue.setUpdatedGiftType(selectedValue);
+                      updateValue.setEnable();
                     },
                     hintText: 'Select Gift Type',
                     width: Utils(context).width,
-
                   ),
                   Gap(Utils(context).height * .01),
                   InfoInputForm(
                     labelText: 'Amount',
                     controller: _amountController,
-                    enabledField: dropDownValue.enableTk,
+                    enabledField: updateValue.enableTk,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                   ),
@@ -95,7 +96,7 @@ class _UpdateInputScreenState extends State<UpdateInputScreen> {
                   InfoInputForm(
                     labelText: 'Gift Name',
                     controller: _giftNameController,
-                    enabledField: dropDownValue.enableGift,
+                    enabledField: updateValue.enableGift,
                     textInputAction: TextInputAction.done,
                   ),
                   Gap(Utils(context).height * .1),
@@ -109,16 +110,16 @@ class _UpdateInputScreenState extends State<UpdateInputScreen> {
                             icon: const Icon(Icons.info),
                             flushbarPosition: FlushbarPosition.TOP
                         );
-                      }else if(dropDownValue.selectedGender == 'Select Gender' ||
-                          widget.gifterModel.gender.toString() == '') {
+                      }else if(updateValue.updatedGender == 'Select Gender' ||
+                          widget.gifterModel.gender == null) {
                         Utils.flashBarMessage(
                             context: context,
                             message: 'Please Select Gender',
                             icon: const Icon(Icons.info),
                             flushbarPosition: FlushbarPosition.TOP
                         );
-                      }else if(dropDownValue.selectedGiftType == 'Select Gift Type' ||
-                          widget.gifterModel.giftType.toString() == ''){
+                      }else if(updateValue.updatedGiftType == 'Select Gift Type' ||
+                          widget.gifterModel.giftType == null){
                         Utils.flashBarMessage(
                             context: context,
                             message: 'Please Select Gift Type',
@@ -129,8 +130,8 @@ class _UpdateInputScreenState extends State<UpdateInputScreen> {
                         dbHelper.updatedQuantity(GifterModel(
                             id: widget.gifterModel.id,
                             name: _nameController.text.toString(),
-                            gender: dropDownValue.selectedGender ?? widget.gifterModel.gender.toString(),
-                            giftType: dropDownValue.selectedGiftType ?? widget.gifterModel.giftType.toString(),
+                            gender: updateValue.updatedGender,
+                            giftType: updateValue.updatedGiftType,
                             amount: _amountController.text.toString(),
                             giftName: _giftNameController.text.toString(),
                             date: DateTime.now().toString()
@@ -141,9 +142,7 @@ class _UpdateInputScreenState extends State<UpdateInputScreen> {
                           debugPrint(widget.gifterModel.gender.toString());
                           debugPrint(widget.gifterModel.giftType.toString());
                           Utils.toastMessage('Data updated');
-                          dropDownValue.setToNull();
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=> const GifterList()));
-                          dropDownValue.setToNull();
                         }).onError((error, stackTrace) {
                           debugPrint(error.toString());
                           Utils.flashBarMessage(
