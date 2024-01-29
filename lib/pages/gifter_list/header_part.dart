@@ -86,7 +86,6 @@ class _HeaderPartState extends State<HeaderPart> {
                           dropDownValue.setGenderValue(dropDownValue.genderOption.first);
                         }
                         dropDownValue.setGiftTypeValue(selectedValue);
-                       // dropDownValue.setGenderValue(dropDownValue.genderOption.first);
                         searchProvider.filterData(
                             gender: dropDownValue.selectedGender.toString(),
                             giftType: selectedValue! );
@@ -177,6 +176,7 @@ class _HeaderPartState extends State<HeaderPart> {
                               onPressed: () {
                                 print('index $id');
                                 sea.delete(id);
+                                //sea.getData();
                                 //deleteNote(id);
                                 value.removeItem();
                                 Navigator.pop(context);

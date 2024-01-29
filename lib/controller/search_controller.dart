@@ -12,7 +12,6 @@ class SearchProvider extends ChangeNotifier {
   DBHelper _dbHelper = DBHelper();
   DBHelper get dbHelper => _dbHelper;
 
-  String searchName = '', searchGender = '', searchGiftType = '';
 
   void getData() async {
     _data = await _dbHelper.getGiftData();
@@ -30,6 +29,7 @@ class SearchProvider extends ChangeNotifier {
   }
 
   void filterData ({required String gender, required String giftType}){
+
     print('gender= $gender and $giftType');
     if(gender == 'Select Gender' && giftType == 'Select Gift Type'){
       filteredData = data;
