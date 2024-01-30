@@ -56,6 +56,7 @@ class SearchProvider extends ChangeNotifier {
    delete(int index){
     dbHelper.delete(filteredData[index].id);
     filteredData.removeAt(index);
+    getData();
     print('hello $index');
     notifyListeners();
   }
